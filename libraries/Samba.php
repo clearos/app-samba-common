@@ -1620,6 +1620,21 @@ class Samba extends Software
     }
 
     /**
+     * Checks to see if local Samba system allows file serving.
+     *
+     * @return boolean TRUE if local Samba system allows file serving.
+     * @throws Engine_Exception
+     */
+
+    public function is_file_server()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        // FIXME - implement this properly
+        return $this->is_local_system_initialized();
+    }
+
+    /**
      * Checks to see if local Samba system had been initialized.
      *
      * @return boolean TRUE if local Samba system has been initialized
