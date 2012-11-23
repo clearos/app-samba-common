@@ -241,6 +241,48 @@ class Samba extends Software
     }
 
     /**
+     * Adds include to global section.
+     *
+     * @param string $filename filename
+     *
+     * @return void
+     * @throws Engine_Exception
+     */
+
+    public function add_include($filename)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        $file = new File(self::FILE_CONFIG);
+
+        try {
+            $preg_filename = preg_quote($filename, '/');
+            $file->lookup_line("/^include.*$preg_filename/");
+            return; // Lookup succeeded, we're done.
+        } catch (File_No_Match_Exception $e) {
+            // No match?  Add include below.
+        }
+
+        $lines = $file->get_contents_as_array();
+        $new_lines = array();
+        $done_global = FALSE;
+
+        foreach ($lines as $line) {
+            if (! $done_global && preg_match('/^\[/', $line) && !preg_match('/^\[global\]/', $line)) {
+                $new_lines[] = "include $filename";
+                $new_lines[] = '';
+                $done_global = TRUE;
+            }
+
+            $new_lines[] = $line;
+        }
+
+        $file->dump_contents_from_array($new_lines);
+
+        $this->loaded = FALSE;
+    }
+
+    /**
      * Returns administrator account.
      *
      * @return string administrator account
