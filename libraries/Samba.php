@@ -67,9 +67,9 @@ use \clearos\apps\network\Hostname as Hostname;
 use \clearos\apps\network\Network_Utils as Network_Utils;
 use \clearos\apps\samba\Nmbd as Nmbd;
 use \clearos\apps\samba\OpenLDAP_Driver as OpenLDAP_Driver;
-use \clearos\apps\samba\Samba as Samba;
 use \clearos\apps\samba\Smbd as Smbd;
 use \clearos\apps\samba\Winbind as Winbind;
+use \clearos\apps\samba_common\Samba as Samba;
 use \clearos\apps\users\User_Factory as User_Factory;
 
 clearos_load_library('accounts/Accounts_Configuration');
@@ -83,9 +83,9 @@ clearos_load_library('network/Hostname');
 clearos_load_library('network/Network_Utils');
 clearos_load_library('samba/Nmbd');
 clearos_load_library('samba/OpenLDAP_Driver');
-clearos_load_library('samba/Samba');
 clearos_load_library('samba/Smbd');
 clearos_load_library('samba/Winbind');
+clearos_load_library('samba_common/Samba');
 clearos_load_library('users/User_Factory');
 
 // Exceptions
@@ -96,17 +96,17 @@ use \clearos\apps\accounts\Accounts_Driver_Not_Set_Exception as Accounts_Driver_
 use \clearos\apps\base\Engine_Exception as Engine_Exception;
 use \clearos\apps\base\File_No_Match_Exception as File_No_Match_Exception;
 use \clearos\apps\base\Validation_Exception as Validation_Exception;
-use \clearos\apps\samba\Samba_Connection_Exception as Samba_Connection_Exception;
-use \clearos\apps\samba\Samba_Not_Initialized_Exception as Samba_Not_Initialized_Exception;
-use \clearos\apps\samba\Samba_Share_Not_Found_Exception as Samba_Share_Not_Found_Exception;
+use \clearos\apps\samba_common\Samba_Connection_Exception as Samba_Connection_Exception;
+use \clearos\apps\samba_common\Samba_Not_Initialized_Exception as Samba_Not_Initialized_Exception;
+use \clearos\apps\samba_common\Samba_Share_Not_Found_Exception as Samba_Share_Not_Found_Exception;
 
 clearos_load_library('accounts/Accounts_Driver_Not_Set_Exception');
 clearos_load_library('base/Engine_Exception');
 clearos_load_library('base/File_No_Match_Exception');
 clearos_load_library('base/Validation_Exception');
-clearos_load_library('samba/Samba_Connection_Exception');
-clearos_load_library('samba/Samba_Not_Initialized_Exception');
-clearos_load_library('samba/Samba_Share_Not_Found_Exception');
+clearos_load_library('samba_common/Samba_Connection_Exception');
+clearos_load_library('samba_common/Samba_Not_Initialized_Exception');
+clearos_load_library('samba_common/Samba_Share_Not_Found_Exception');
 
 ///////////////////////////////////////////////////////////////////////////////
 // C L A S S
