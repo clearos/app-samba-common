@@ -46,7 +46,7 @@ require_once $bootstrap . '/bootstrap.php';
 // T R A N S L A T I O N S
 ///////////////////////////////////////////////////////////////////////////////
 
-clearos_load_language('base');
+clearos_load_language('samba_common');
 
 ///////////////////////////////////////////////////////////////////////////////
 // D E P E N D E N C I E S
@@ -80,6 +80,6 @@ class Samba_Not_Initialized_Exception extends Engine_Exception
 
     public function __construct()
     {
-        parent::__construct(lang('samba_software_has_not_been_initialized'), CLEAROS_INFO);
+        parent::__construct(lang('samba_common_software_has_not_been_initialized'), CLEAROS_INFO);
     }
 }

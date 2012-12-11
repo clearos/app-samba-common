@@ -47,6 +47,7 @@ require_once $bootstrap . '/bootstrap.php';
 ///////////////////////////////////////////////////////////////////////////////
 
 clearos_load_language('base');
+clearos_load_language('samba_common');
 
 ///////////////////////////////////////////////////////////////////////////////
 // D E P E N D E N C I E S
@@ -80,6 +81,6 @@ class Samba_Share_Not_Found_Exception extends Engine_Exception
 
     public function __construct()
     {
-        parent::__construct(lang('samba_file_share_not_found'), CLEAROS_INFO);
+        parent::__construct(lang('samba_common_file_share_not_found'), CLEAROS_INFO);
     }
 }

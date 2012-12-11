@@ -48,6 +48,7 @@ require_once $bootstrap . '/bootstrap.php';
 
 clearos_load_language('base');
 clearos_load_language('samba');
+clearos_load_language('samba_common');
 
 ///////////////////////////////////////////////////////////////////////////////
 // D E P E N D E N C I E S
@@ -197,10 +198,10 @@ class Samba extends Software
         );
 
         $this->modes = array(
-            self::MODE_PDC => lang('samba_pdc'),
-            self::MODE_BDC => lang('samba_bdc'),
-            self::MODE_MEMBER => lang('samba_member_server'),
-            self::MODE_SIMPLE_SERVER => lang('samba_simple_server'),
+            self::MODE_PDC => lang('samba_common_pdc'),
+            self::MODE_BDC => lang('samba_common_bdc'),
+            self::MODE_MEMBER => lang('samba_common_member_server'),
+            self::MODE_SIMPLE_SERVER => lang('samba_common_simple_server'),
         );
 
         $this->booleans = array(
@@ -817,8 +818,8 @@ class Samba extends Software
 
         $modes =  array(
             self::PRINTING_DISABLED => lang('base_disabled'),
-            self::PRINTING_RAW => lang('samba_raw_printing'),
-            self::PRINTING_POINT_AND_CLICK => lang('samba_point_and_click_printing')
+            self::PRINTING_RAW => lang('samba_common_raw_printing'),
+            self::PRINTING_POINT_AND_CLICK => lang('samba_common_point_and_click_printing')
         );
 
         return $modes;
@@ -990,7 +991,7 @@ class Samba extends Software
         $shareinfo['valid users'] = '%D\%S';
         $shareinfo['available'] = 'Yes';
         $shareinfo['path'] = '/home/%U';
-        $shareinfo['comment'] = lang('samba_home_directory');
+        $shareinfo['comment'] = lang('samba_common_home_directory');
         $sharelist[] = $shareinfo;
 
         $shareinfo = array();
@@ -1000,7 +1001,7 @@ class Samba extends Software
         $shareinfo['read only'] = 'No';
         $shareinfo['available'] = 'Yes';
         $shareinfo['path'] = "/var/samba/netlogon";
-        $shareinfo['comment'] = lang('samba_netlogon_directory');
+        $shareinfo['comment'] = lang('samba_common_netlogon_directory');
         $sharelist[] = $shareinfo;
 
         $shareinfo = array();
@@ -1013,7 +1014,7 @@ class Samba extends Software
         $shareinfo['force group'] = "domain_users"; // TODO: should be constant
         $shareinfo['force directory mode'] = "02775";
         $shareinfo['force directory security mode'] = "02775";
-        $shareinfo['comment'] = lang('samba_profiles_directory');
+        $shareinfo['comment'] = lang('samba_common_profiles_directory');
         $sharelist[] = $shareinfo;
 
         $shareinfo = array();
@@ -1026,7 +1027,7 @@ class Samba extends Software
         $shareinfo['printing'] = 'cups';
         $shareinfo['available'] = 'No';
         $shareinfo['path'] = "/var/spool/samba";
-        $shareinfo['comment'] = lang('samba_printer_spool');
+        $shareinfo['comment'] = lang('samba_common_printer_spool');
         $sharelist[] = $shareinfo;
 
         $shareinfo = array();
@@ -1035,7 +1036,7 @@ class Samba extends Software
         $shareinfo['read only'] = 'No';
         $shareinfo['available'] = 'No';
         $shareinfo['path'] = "/var/samba/drivers";
-        $shareinfo['comment'] = lang('samba_printer_drivers');
+        $shareinfo['comment'] = lang('samba_common_printer_drivers');
         $sharelist[] = $shareinfo;
 
         return $sharelist;
@@ -1243,15 +1244,15 @@ class Samba extends Software
             $output = $shell->get_last_output_line();
 
             if (preg_match('/Logon failure/', $output))
-                $message = lang('samba_authentication_failure');
+                $message = lang('samba_common_authentication_failure');
             else if (preg_match('/network name cannot be found/', $output))
-                $message = lang('samba_server_name_could_not_be_found');
+                $message = lang('samba_common_server_name_could_not_be_found');
             else if (preg_match('/connection was refused/', $output))
-                $message = lang('samba_connection_to_server_was_refused');
+                $message = lang('samba_common_connection_to_server_was_refused');
             else if (preg_match('/NT_STATUS_HOST_UNREACHABLE/', $output))
-                $message = lang('samba_server_is_not_reachable');
+                $message = lang('samba_common_server_is_not_reachable');
             else if (preg_match('/NT_STATUS_IO_TIMEOUT/', $output))
-                $message = lang('samba_server_response_took_too_long');
+                $message = lang('samba_common_server_response_took_too_long');
             else
                 $message = $output;
 
@@ -1880,7 +1881,7 @@ class Samba extends Software
 
         // You cannot have "wins server" and "wins support" at the same time
         if ($is_wins && $server)
-            throw new Validation_Exception(lang('samba_wins_configuration_conflict'));
+            throw new Validation_Exception(lang('samba_common_wins_configuration_conflict'));
 
         $is_wins_param = ($is_wins) ? 'Yes' : 'No';
 
@@ -1989,7 +1990,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (!array_key_exists($backend, $this->idmap_backends))
-            return lang('samba_idmap_backend_invalid');
+            return lang('samba_common_idmap_backend_invalid');
     }
 
     /**
@@ -2005,7 +2006,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_domain_logons_setting_invalid');
+            return lang('samba_common_domain_logons_setting_invalid');
     }
 
     /**
@@ -2021,7 +2022,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_domain_master_setting_invalid');
+            return lang('samba_common_domain_master_setting_invalid');
     }
 
     /**
@@ -2037,7 +2038,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_homes_state_invalid');
+            return lang('samba_common_homes_state_invalid');
     }
 
     /**
@@ -2053,7 +2054,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_local_master_setting_invalid');
+            return lang('samba_common_local_master_setting_invalid');
     }
 
     /**
@@ -2069,7 +2070,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! array_key_exists($mode, $this->modes))
-            return lang('samba_server_mode_invalid');
+            return lang('samba_common_server_mode_invalid');
     }
 
     /**
@@ -2085,7 +2086,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_preferred_master_setting_invalid');
+            return lang('samba_common_preferred_master_setting_invalid');
     }
 
     /**
@@ -2103,13 +2104,13 @@ class Samba extends Software
         $isvalid = TRUE;
 
         if (! (preg_match("/^([a-zA-Z][a-zA-Z0-9\-]*)$/", $netbios_name) && (strlen($netbios_name) <= 15)))
-            return lang('samba_server_name_invalid');
+            return lang('samba_common_server_name_invalid');
 
         $workgroup = strtoupper($this->get_workgroup());
         $netbios_name = strtoupper($netbios_name);
 
         if ($workgroup === $netbios_name)
-            return lang('samba_server_name_conflicts_with_windows_domain');
+            return lang('samba_common_server_name_conflicts_with_windows_domain');
     }
 
     /**
@@ -2138,7 +2139,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! Network_Utils::is_valid_domain($realm))
-            return lang('samba_realm_invalid');
+            return lang('samba_common_realm_invalid');
     }
 
     /**
@@ -2154,7 +2155,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_roaming_profiles_state_invalid');
+            return lang('samba_common_roaming_profiles_state_invalid');
     }
 
     /**
@@ -2170,7 +2171,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! preg_match("/^([a-zA-Z\-$]+)$/", $name))
-            return lang('samba_share_invalid');
+            return lang('samba_common_share_invalid');
     }
 
     /**
@@ -2190,7 +2191,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! (preg_match("/^([a-zA-Z][a-zA-Z0-9_\-]*)$/", $workgroup) && (strlen($workgroup) <= 15)))
-            return lang('samba_windows_domain_invalid');
+            return lang('samba_common_windows_domain_invalid');
 
         $netbios_name = $this->get_netbios_name();
 
@@ -2203,10 +2204,10 @@ class Samba extends Software
         $workgroup = strtoupper($workgroup);
 
         if ($workgroup === $netbios_name)
-            return lang('samba_server_name_conflicts_with_windows_domain');
+            return lang('samba_common_server_name_conflicts_with_windows_domain');
 
         if ($workgroup === $nickname)
-            return lang('samba_hostname_conflicts_with_windows_domain');
+            return lang('samba_common_hostname_conflicts_with_windows_domain');
     }
 
     /**
@@ -2227,7 +2228,7 @@ class Samba extends Software
             ($type === self::SECURITY_ADS) ||
             ($type === self::SECURITY_DOMAIN)
            ))
-            return lang('samba_security_type_invalid');
+            return lang('samba_common_security_type_invalid');
     }
 
     /**
@@ -2243,7 +2244,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! preg_match("/^([a-zA-Z][\-\w ]*)$/", $server_string))
-            return lang('samba_server_comment_invalid');
+            return lang('samba_common_server_comment_invalid');
     }
 
     /**
@@ -2259,7 +2260,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (!preg_match("/^([a-zA-Z0-9\-\.]*)$/", $winsserver))
-            return lang('samba_wins_server_invalid');
+            return lang('samba_common_wins_server_invalid');
     }
 
     /**
@@ -2275,7 +2276,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_wins_support_setting_invalid');
+            return lang('samba_common_wins_support_setting_invalid');
     }
 
     /**
@@ -2291,7 +2292,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! preg_match('/^[A-Z]+:$/', $drive))
-            return lang('samba_logon_drive_invalid' . $drive);
+            return lang('samba_common_logon_drive_invalid' . $drive);
     }
 
     /**
@@ -2355,7 +2356,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if ($oslevel && !preg_match("/^([0-9]+)$/", $oslevel))
-            return lang('samba_os_level_setting_invalid');
+            return lang('samba_common_os_level_setting_invalid');
     }
 
     ///////////////////////////////////////////////////////////////////////////////
