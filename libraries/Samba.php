@@ -1363,6 +1363,24 @@ class Samba extends Software
     }
 
     /**
+     * Sets DNS forwarder.
+     *
+     * @param string $ip IP of DNS forwarder
+     *
+     * @return void
+     * @throws Validation_Exception, Engine_Exception
+     */
+
+    public function set_dns_forwarder($ip)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        Validation_Exception::is_valid($this->validate_dns_forwarder($ip));
+
+        $this->_set_share_info('global', 'dns forwarder', $ip);
+    }
+
+    /**
      * Sets state of homes share.
      *
      * @param boolean $state state of homes share
@@ -1976,6 +1994,22 @@ class Samba extends Software
     ///////////////////////////////////////////////////////////////////////////////
     // V A L I D A T I O N   R O U T I N E S
     ///////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Validation routine for DNS forwarder.
+     *
+     * @param string $ip IP of DNS forwarder
+     *
+     * @return string error message if DNS forwarder is invalid
+     */
+
+    public function validate_dns_forwarder($ip)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if (! Network_Utils::is_valid_ip($ip))
+            return lang('samba_common_dns_forwarder_invalid');
+    }
 
     /**
      * Validation routine IDMAP backend.

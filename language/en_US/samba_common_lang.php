@@ -138,3 +138,4 @@ $lang['samba_common_go_to_user_manager'] = 'Go to User Manager';
 $lang['samba_common_go_to_group_manager'] = 'Go to Group Manager';
 $lang['samba_common_system_not_in_master_mode'] = 'System is not in master mode';
 $lang['samba_common_realm_must_be_in_upper_case'] = 'Realm must be in upper case';
+$lang['samba_common_dns_forwarder_invalid'] = 'DNS forwarder is invalid.';
