@@ -2140,6 +2140,9 @@ class Samba extends Software
 
         if (! Network_Utils::is_valid_domain($realm))
             return lang('samba_common_realm_invalid');
+
+        if (preg_match('/[a-z]/', $realm))
+            return lang('samba_common_realm_must_be_in_upper_case');
     }
 
     /**
