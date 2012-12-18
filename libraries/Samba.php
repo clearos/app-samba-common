@@ -231,7 +231,7 @@ class Samba extends Software
 
         try {
             $preg_filename = preg_quote($filename, '/');
-            $file->lookup_line("/^include.*$preg_filename/");
+            $file->lookup_line("/^\s*include.*$preg_filename/");
             return; // Lookup succeeded, we're done.
         } catch (File_No_Match_Exception $e) {
             // No match?  Add include below.
@@ -243,7 +243,7 @@ class Samba extends Software
 
         foreach ($lines as $line) {
             if (! $done_global && preg_match('/^\[/', $line) && !preg_match('/^\[global\]/', $line)) {
-                $new_lines[] = "include $filename";
+                $new_lines[] = "\tinclude = $filename";
                 $new_lines[] = '';
                 $done_global = TRUE;
             }
@@ -1110,6 +1110,9 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         // FIXME - implement this properly
+        if (file_exists('/var/clearos/samba_directory/initialized'))
+            return TRUE;
+
         return $this->is_local_system_initialized();
     }
 
