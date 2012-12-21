@@ -109,14 +109,15 @@ class Samba extends Software
     // C O N S T A N T S
     ///////////////////////////////////////////////////////////////////////////////
 
+    // Note: FILE_INITIALIZED and FILE_INITIALIZING are used by 
+    // app-samba and app-samba-directory
+
     // Files and paths
     const FILE_CONFIG = '/etc/samba/smb.conf';
     const FILE_DOMAIN_SID = '/etc/samba/domainsid';
     const FILE_LOCAL_SID = '/etc/samba/localsid';
-    const FILE_INITIALIZED = '/var/clearos/samba/initialized';
-    const FILE_INITIALIZING = '/var/clearos/samba/lock/initializing';
-    const FILE_LOCAL_SYSTEM_INITIALIZED = '/var/clearos/samba/initialized_local';
-    const FILE_LOCAL_INITIALIZING = '/var/clearos/samba/lock/initializing_local';
+    const FILE_INITIALIZED = '/var/clearos/samba_common/initialized';
+    const FILE_INITIALIZING = '/var/clearos/samba_common/lock/initializing';
     const FILE_DOMAIN_SID_CACHE = '/var/clearos/samba/domain_sid_cache';
     const PATH_STATE = '/var/lib/samba';
     const PATH_STATE_BACKUP = '/var/clearos/samba/backup';
@@ -1113,26 +1114,7 @@ class Samba extends Software
         if (file_exists('/var/clearos/samba_directory/initialized'))
             return TRUE;
 
-        return $this->is_local_system_initialized();
-    }
-
-    /**
-     * Checks to see if local Samba system had been initialized.
-     *
-     * @return boolean TRUE if local Samba system has been initialized
-     * @throws Engine_Exception
-     */
-
-    public function is_local_system_initialized()
-    {
-        clearos_profile(__METHOD__, __LINE__);
-
-        $file = new File(Samba::FILE_LOCAL_SYSTEM_INITIALIZED);
-
-        if ($file->exists())
-            return TRUE;
-        else
-            return FALSE;
+        return $this->is_initialized();
     }
 
     /**
@@ -1147,7 +1129,8 @@ class Samba extends Software
 
         $file = new File(self::FILE_INITIALIZED);
 
-        if ($file->exists())
+        // TODO: remove file_exists check on old path in version 7
+        if ($file->exists() || file_exists('/var/clearos/samba/initialized_local'))
             return TRUE;
         else
             return FALSE;
@@ -1402,6 +1385,27 @@ class Samba extends Software
             $this->set_share_availability('homes', TRUE);
         else
             $this->set_share_availability('homes', FALSE);
+    }
+
+    /**
+     * Sets initialized flag.
+     *
+     * @param boolean $state state
+     *
+     * @return void
+     * @throws Engine_Exception
+     */
+
+    public function set_initialized($state = TRUE)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        $file = new File(self::FILE_INITIALIZED);
+
+        if ($state && !$file->exists())
+            $file->create('root', 'root', '0644');
+        else if (!$state && $file->exists())
+            $file->delete();
     }
 
     /**
@@ -1773,30 +1777,6 @@ class Samba extends Software
     }
 
     /**
-     * Sets system initialized flag.
-     *
-     * @param boolean $state flag indicating system initialization state
-     *
-     * @return void
-     * @throws Validation_Exception, Engine_Exception
-     */
-
-    public function set_local_system_initialized($state)
-    {
-        clearos_profile(__METHOD__, __LINE__);
-
-        $file = new File(Samba::FILE_LOCAL_SYSTEM_INITIALIZED);
-
-        if ($state) {
-            if (! $file->exists())
-                $file->create("root", "root", "0644");
-        } else {
-            if ($file->exists())
-                $file->delete();
-        }
-    }
-
-    /**
      * Sets realm.
      *
      * @param string $realm realm
@@ -2161,6 +2141,9 @@ class Samba extends Software
     public function validate_password($password)
     {
         clearos_profile(__METHOD__, __LINE__);
+        
+        if (empty($password))
+            return lang('base_password_is_invalid');
     }
 
     /**
@@ -2590,23 +2573,6 @@ class Samba extends Software
         //----------------------------------------
 
         $new_config->move_to(self::FILE_CONFIG);
-    }
-
-    /**
-     * Sets initialized flag.
-     *
-     * @return void
-     * @throws Engine_Exception
-     */
-
-    public function set_initialized()
-    {
-        clearos_profile(__METHOD__, __LINE__);
-
-        $file = new File(self::FILE_INITIALIZED);
-
-        if (! $file->exists())
-            $file->create('root', 'root', '0644');
     }
 
     /**

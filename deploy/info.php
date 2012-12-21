@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'samba_common';
-$app['version'] = '1.4.8';
+$app['version'] = '1.4.10';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -27,3 +27,11 @@ $app['menu_enabled'] = FALSE;
 /////////////////////////////////////////////////////////////////////////////
 
 $app['core_only'] = TRUE;
+
+$app['core_directory_manifest'] = array(
+    '/var/clearos/samba_common/lock' => array(
+        'mode' => '0775',
+        'owner' => 'root',
+        'group' => 'webconfig',
+    ),
+);

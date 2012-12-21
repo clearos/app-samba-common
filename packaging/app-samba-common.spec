@@ -1,7 +1,7 @@
 
 Name: app-samba-common
 Epoch: 1
-Version: 1.4.8
+Version: 1.4.10
 Release: 1%{dist}
 Summary: Samba Common - Core
 License: LGPLv3
@@ -29,6 +29,7 @@ This package provides the core API and libraries.
 mkdir -p -m 755 %{buildroot}/usr/clearos/apps/samba_common
 cp -r * %{buildroot}/usr/clearos/apps/samba_common/
 
+install -d -m 0775 %{buildroot}/var/clearos/samba_common/lock
 
 %post core
 logger -p local6.notice -t installer 'app-samba-common-core - installing'
@@ -54,6 +55,7 @@ exit 0
 %exclude /usr/clearos/apps/samba_common/packaging
 %exclude /usr/clearos/apps/samba_common/tests
 %dir /usr/clearos/apps/samba_common
+%dir %attr(0775,root,webconfig) /var/clearos/samba_common/lock
 /usr/clearos/apps/samba_common/deploy
 /usr/clearos/apps/samba_common/language
 /usr/clearos/apps/samba_common/libraries
