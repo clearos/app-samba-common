@@ -195,6 +195,7 @@ class Samba extends Software
 
         $this->idmap_backends = array(
             'ldap' => 'LDAP',
+            'rid' => 'RID',
             'tdb' => 'TDB'
         );
 
