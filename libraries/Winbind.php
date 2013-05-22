@@ -3,9 +3,9 @@
 /**
  * Winbind server class.
  *
- * @category   Apps
- * @package    Samba_Common
- * @subpackage Libraries
+ * @category   apps
+ * @package    samba-common
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2009-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
@@ -73,9 +73,9 @@ use \Exception as Exception;
 /**
  * Winbind server class.
  *
- * @category   Apps
- * @package    Samba_Common
- * @subpackage Libraries
+ * @category   apps
+ * @package    samba-common
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2009-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later

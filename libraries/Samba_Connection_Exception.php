@@ -3,9 +3,9 @@
 /**
  * Samba connection exception class.
  *
- * @category   Apps
- * @package    Samba_Common
- * @subpackage Exceptions
+ * @category   apps
+ * @package    samba-common
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2003-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
@@ -63,9 +63,9 @@ clearos_load_library('base/Engine_Exception');
 /**
  * Samba connection exception class.
  *
- * @category   Apps
- * @package    Samba_Common
- * @subpackage Exceptions
+ * @category   apps
+ * @package    samba-common
+ * @subpackage libraries
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2003-2012 ClearFoundation
  * @license    http://www.gnu.org/copyleft/lgpl.html GNU Lesser General Public License version 3 or later
