@@ -2159,7 +2159,7 @@ class Samba extends Software
     {
         clearos_profile(__METHOD__, __LINE__);
 
-        if (! Network_Utils::is_valid_domain($realm))
+        if (! Network_Utils::is_valid_hostname_alias($realm))
             return lang('samba_common_realm_invalid');
 
         if (preg_match('/[a-z]/', $realm))
