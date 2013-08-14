@@ -28,6 +28,10 @@ $app['menu_enabled'] = FALSE;
 
 $app['core_only'] = TRUE;
 
+$app['core_requires'] = array(
+    'app-network-core >= 1:1.4.70',
+);
+
 $app['core_directory_manifest'] = array(
     '/var/clearos/samba_common/lock' => array(
         'mode' => '0775',
@@ -35,3 +39,16 @@ $app['core_directory_manifest'] = array(
         'group' => 'webconfig',
     ),
 );
+
+$app['core_file_manifest'] = array(
+    'samba_common.conf' => array(
+        'target' => '/etc/clearos/samba_common.conf',
+        'config' => TRUE,
+        'config_params' => 'noreplace',
+    ),
+    'network-configuration-event' => array(
+        'target' => '/var/clearos/events/network_configuration/samba_common',
+        'mode' => '0755'
+    ),
+);
+

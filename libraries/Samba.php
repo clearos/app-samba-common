@@ -61,6 +61,7 @@ use \clearos\apps\base\File as File;
 use \clearos\apps\base\Shell as Shell;
 use \clearos\apps\base\Software as Software;
 use \clearos\apps\network\Hostname as Hostname;
+use \clearos\apps\network\Iface_Manager as Iface_Manager;
 use \clearos\apps\network\Network_Utils as Network_Utils;
 use \clearos\apps\samba_common\Samba as Samba;
 
@@ -68,6 +69,7 @@ clearos_load_library('base/File');
 clearos_load_library('base/Shell');
 clearos_load_library('base/Software');
 clearos_load_library('network/Hostname');
+clearos_load_library('network/Iface_Manager');
 clearos_load_library('network/Network_Utils');
 clearos_load_library('samba_common/Samba');
 
@@ -77,12 +79,14 @@ clearos_load_library('samba_common/Samba');
 use \Exception as Exception;
 use \clearos\apps\base\Engine_Exception as Engine_Exception;
 use \clearos\apps\base\File_No_Match_Exception as File_No_Match_Exception;
+use \clearos\apps\base\File_Not_Found_Exception as File_Not_Found_Exception;
 use \clearos\apps\base\Validation_Exception as Validation_Exception;
 use \clearos\apps\samba_common\Samba_Connection_Exception as Samba_Connection_Exception;
 use \clearos\apps\samba_common\Samba_Share_Not_Found_Exception as Samba_Share_Not_Found_Exception;
 
 clearos_load_library('base/Engine_Exception');
 clearos_load_library('base/File_No_Match_Exception');
+clearos_load_library('base/File_Not_Found_Exception');
 clearos_load_library('base/Validation_Exception');
 clearos_load_library('samba_common/Samba_Connection_Exception');
 clearos_load_library('samba_common/Samba_Share_Not_Found_Exception');
@@ -113,6 +117,7 @@ class Samba extends Software
     // app-samba and app-samba-directory
 
     // Files and paths
+    const FILE_APP_CONFIG = '/etc/clearos/samba_common.conf';
     const FILE_CONFIG = '/etc/samba/smb.conf';
     const FILE_DOMAIN_SID = '/etc/samba/domainsid';
     const FILE_LOCAL_SID = '/etc/samba/localsid';
@@ -256,6 +261,48 @@ class Samba extends Software
         $file->dump_contents_from_array($new_lines);
 
         $this->loaded = FALSE;
+    }
+
+    /**
+     * Automatically configures the bind interfaces system.
+     *
+     * @return void
+     * @throws Engine_Exception, Validation_Exception
+     */
+
+    public function auto_configure()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        // Check auto-configure state
+        //---------------------------
+
+        $app_config = new File(self::FILE_APP_CONFIG);
+
+        try {
+            $value = $app_config->lookup_value("/^auto_configure\s*=\s*/i");
+            if (preg_match('/no/i', $value))
+                return;
+        } catch (File_Not_Found_Exception $e) {
+        } catch (File_No_Match_Exception $e) {
+        }
+
+        // Implant LAN interface configuration
+        //------------------------------------
+
+        $iface_manager = new Iface_Manager();
+        $ifaces = $iface_manager->get_most_trusted_interfaces();
+        $new = 'lo ' . implode(' ', $ifaces);
+
+        $current = $this->get_interfaces();
+
+        // Bail if nothing has changed
+        if ($new === $current)
+            return;
+
+        $this->_set_share_info('global', 'interfaces', $new);
+
+        clearos_log('samba-common', lang('base_network_configuration_updated'));
     }
 
     /**

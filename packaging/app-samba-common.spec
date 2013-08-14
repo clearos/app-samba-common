@@ -15,6 +15,7 @@ The Samba Common app provides base libraries that can be used in both Samba 3 an
 %package core
 Summary: Samba Common - Core
 Requires: app-base-core
+Requires: app-network-core >= 1:1.4.70
 
 %description core
 The Samba Common app provides base libraries that can be used in both Samba 3 and Samba 4
@@ -30,6 +31,8 @@ mkdir -p -m 755 %{buildroot}/usr/clearos/apps/samba_common
 cp -r * %{buildroot}/usr/clearos/apps/samba_common/
 
 install -d -m 0775 %{buildroot}/var/clearos/samba_common/lock
+install -D -m 0755 packaging/network-configuration-event %{buildroot}/var/clearos/events/network_configuration/samba_common
+install -D -m 0644 packaging/samba_common.conf %{buildroot}/etc/clearos/samba_common.conf
 
 %post core
 logger -p local6.notice -t installer 'app-samba-common-core - installing'
@@ -59,3 +62,5 @@ exit 0
 /usr/clearos/apps/samba_common/deploy
 /usr/clearos/apps/samba_common/language
 /usr/clearos/apps/samba_common/libraries
+/var/clearos/events/network_configuration/samba_common
+%config(noreplace) /etc/clearos/samba_common.conf
