@@ -696,7 +696,9 @@ class Samba extends Software
         if (! $this->loaded)
             $this->_load();
 
-        return $this->shares['global']['netbios name']['value'];
+        $retval = (isset($this->shares['global']['netbios name']['value'])) ? $this->shares['global']['netbios name']['value'] : '';
+
+        return $retval;
     }
 
     /**
@@ -1144,7 +1146,9 @@ class Samba extends Software
         if (! $this->loaded)
             $this->_load();
 
-        return $this->shares['global']['workgroup']['value'];
+        $retval = (isset($this->shares['global']['workgroup']['value'])) ? $this->shares['global']['workgroup']['value'] : '';
+
+        return $retval;
     }
 
     /**
