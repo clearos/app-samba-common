@@ -470,6 +470,23 @@ class Samba extends Software
     }
 
     /**
+     * Returns home diretory template.
+     *
+     * @return string home directory template
+     * @throws Engine_Exception
+     */
+
+    public function get_home_directory_template()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if (! $this->loaded)
+            $this->_load();
+
+        return $this->shares['global']['template homedir']['value'];
+    }
+
+    /**
      * Returns state of home share.
      *
      * @return boolean state of home share
