@@ -56,7 +56,6 @@ exit 0
 %files core
 %defattr(-,root,root)
 %exclude /usr/clearos/apps/samba_common/packaging
-%exclude /usr/clearos/apps/samba_common/tests
 %dir /usr/clearos/apps/samba_common
 %dir %attr(0775,root,webconfig) /var/clearos/samba_common/lock
 /usr/clearos/apps/samba_common/deploy

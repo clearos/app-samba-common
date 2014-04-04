@@ -63,7 +63,10 @@ use \clearos\apps\base\Software as Software;
 use \clearos\apps\network\Hostname as Hostname;
 use \clearos\apps\network\Iface_Manager as Iface_Manager;
 use \clearos\apps\network\Network_Utils as Network_Utils;
+use \clearos\apps\samba_common\Nmbd as Nmbd;
 use \clearos\apps\samba_common\Samba as Samba;
+use \clearos\apps\samba_common\Smbd as Smbd;
+use \clearos\apps\samba_common\Winbind as Winbind;
 
 clearos_load_library('base/File');
 clearos_load_library('base/Shell');
@@ -71,7 +74,10 @@ clearos_load_library('base/Software');
 clearos_load_library('network/Hostname');
 clearos_load_library('network/Iface_Manager');
 clearos_load_library('network/Network_Utils');
+clearos_load_library('samba_common/Nmbd');
 clearos_load_library('samba_common/Samba');
+clearos_load_library('samba_common/Smbd');
+clearos_load_library('samba_common/Winbind');
 
 // Exceptions
 //-----------
@@ -297,12 +303,21 @@ class Samba extends Software
         $current = $this->get_interfaces();
 
         // Bail if nothing has changed
-        if ($new === $current)
+        if (trim($new) === trim($current))
             return;
 
         $this->_set_share_info('global', 'interfaces', $new);
 
         clearos_log('samba-common', lang('base_network_configuration_updated'));
+
+        $winbind = new Winbind();
+        $winbind->reset();
+
+        $nmbd = new Nmbd();
+        $nmbd->reset();
+
+        $smbd = new Smbd();
+        $smbd->reset();
     }
 
     /**
