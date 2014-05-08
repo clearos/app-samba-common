@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'samba_common';
-$app['version'] = '1.5.5';
+$app['version'] = '1.6.0';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -30,9 +30,12 @@ $app['core_only'] = TRUE;
 
 $app['core_requires'] = array(
     'app-network-core >= 1:1.4.70',
+    'app-events-core',
+    'csplugin-filewatch',
 );
 
 $app['core_directory_manifest'] = array(
+    '/var/clearos/events/samba_configuration' => array(),
     '/var/clearos/samba_common/lock' => array(
         'mode' => '0775',
         'owner' => 'root',
@@ -41,6 +44,7 @@ $app['core_directory_manifest'] = array(
 );
 
 $app['core_file_manifest'] = array(
+    'filewatch-samba-configuration-event.conf'=> array('target' => '/etc/clearsync.d/filewatch-samba-configuration-event.conf'),
     'samba_common.conf' => array(
         'target' => '/etc/clearos/samba_common.conf',
         'config' => TRUE,
