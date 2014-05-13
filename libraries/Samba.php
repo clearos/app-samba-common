@@ -293,6 +293,14 @@ class Samba extends Software
         } catch (File_No_Match_Exception $e) {
         }
 
+        // Bail if Samba is not installed yet
+        //-----------------------------------
+
+        $file = new File(self::FILE_CONFIG);
+
+        if (!$file->exists())
+            return;
+
         // Implant LAN interface configuration
         //------------------------------------
 
