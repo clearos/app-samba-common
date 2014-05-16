@@ -2058,12 +2058,8 @@ class Samba extends Software
         // TODO: Swap this around.  The logic in the add-samba-directories script
         // should be moved here and the script should then call this method.
 
-        try {
-            $shell = new Shell();
-            $shell->Execute(self::COMMAND_ADD_SAMBA_DIRS, '', TRUE);
-        } catch (Exception $e) {
-            throw new Engine_Exception($e->GetMessage(), COMMON_ERROR);
-        }
+        $shell = new Shell();
+        $shell->Execute(self::COMMAND_ADD_SAMBA_DIRS, '', TRUE);
     }
 
     ///////////////////////////////////////////////////////////////////////////////
