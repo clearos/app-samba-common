@@ -2143,7 +2143,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_common_homes_state_invalid');
+            return lang('base_state_invalid');
     }
 
     /**
@@ -2266,7 +2266,7 @@ class Samba extends Software
         clearos_profile(__METHOD__, __LINE__);
 
         if (! clearos_is_valid_boolean($state))
-            return lang('samba_common_roaming_profiles_state_invalid');
+            return lang('base_state_invalid');
     }
 
     /**
