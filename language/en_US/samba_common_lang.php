@@ -122,6 +122,7 @@ $lang['samba_common_software_has_not_been_initialized'] = 'Software has not been
 $lang['samba_common_system_not_in_master_mode'] = 'System is not in master mode.';
 $lang['samba_common_username_invalid'] = 'Username is invalid.';
 $lang['samba_common_winbind_server'] = 'Samba Winbind';
+$lang['samba_common_windows_10_support'] = 'Windows 10 Domain Logons';
 $lang['samba_common_windows_administrator'] = 'Windows Administrator';
 $lang['samba_common_windows_domain'] = 'Windows Domain';
 $lang['samba_common_windows_domain_invalid'] = 'Windows domain is invalid.';

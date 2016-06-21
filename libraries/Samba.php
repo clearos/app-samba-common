@@ -169,6 +169,8 @@ class Samba extends Software
     const CONSTANT_DOMAIN_USERS_RID = '513';
     const CONSTANT_WINADMIN_USERNAME = 'winadmin'; // FIXME remove
     const CONSTANT_DOMAIN_SID_CACHE_TIME = 120;
+    const CONSTANT_SERVER_MAX_PROTOCOL_NT1 = 'NT1';
+    const CONSTANT_UNSET = 'unset';
 
     // Default configuration values
     const DEFAULT_IDMAP_BACKEND = 'tdb';
@@ -186,6 +188,7 @@ class Samba extends Software
     protected $values = array();
     protected $booleans = array();
     protected $modes = array();
+    protected $protocols = array();
     protected $raw_lines = array();
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -215,6 +218,11 @@ class Samba extends Software
             self::MODE_BDC => lang('samba_common_bdc'),
             self::MODE_MEMBER => lang('samba_common_member_server'),
             self::MODE_SIMPLE_SERVER => lang('samba_common_simple_server'),
+        );
+
+        $this->protocols = array(
+            self::CONSTANT_UNSET,
+            'NT1',
         );
 
         $this->booleans = array(
@@ -1134,6 +1142,43 @@ class Samba extends Software
     }
 
     /**
+     * Returns Windows 10 support.
+     *
+     * @return  string  max protocol constant
+     * @throws Engine_Exception
+     */
+
+    public function get_server_max_protocol()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if (! $this->loaded)
+            $this->_load();
+
+        if (empty($this->shares['global']['server max protocol']['value']))
+            return self::CONSTANT_UNSET;
+        else
+            return $this->shares['global']['server max protocol']['value'];
+    }
+
+    /**
+     * Returns Windows 10 support.
+     *
+     * @return boolean TRUE if Windows 10 domain logons supported.
+     * @throws Engine_Exception
+     */
+
+    public function get_windows_10_support()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if ($this->get_server_max_protocol() == self::CONSTANT_SERVER_MAX_PROTOCOL_NT1)
+            return TRUE;
+        else
+            return FALSE;
+    }
+
+    /**
      * Returns WINS server.
      *
      * @return string WINS server
@@ -1956,6 +2001,48 @@ class Samba extends Software
     }
 
     /**
+     * Sets winbind separator.
+     *
+     * @param string $separator separator
+     *
+     * @return void
+     * @throws Validation_Exception, Engine_Exception
+     */
+
+    public function set_windows_10_support($state)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        Validation_Exception::is_valid($this->validate_windows_10_support($state));
+
+        if ($state)
+            $this->set_server_max_protocol(self::CONSTANT_SERVER_MAX_PROTOCOL_NT1);
+        else
+            $this->set_server_max_protocol('');
+    }
+
+    /**
+     * Sets server max protocol
+     *
+     * @param string $protocol server max protocol
+     *
+     * @return void
+     * @throws Validation_Exception, Engine_Exception
+     */
+
+    public function set_server_max_protocol($protocol)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        Validation_Exception::is_valid($this->validate_server_max_protocol($protocol));
+
+        if (!empty($protocol) && ($protocol != self::CONSTANT_UNSET))
+            $this->_set_share_info('global', 'server max protocol', $protocol);
+        else
+            $this->_set_share_info('global', 'server max protocol', '');
+    }
+
+    /**
      * Sets WINS server and support.
      *
      * @param string $server WINS server
@@ -2359,6 +2446,25 @@ class Samba extends Software
     }
 
     /**
+     * Validation routine for server protocol.
+     *
+     * @param string $protocol protocol name
+     *
+     * @return string error message if protocol is invalid
+     */
+
+    public function validate_server_max_protocol($protocol)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if ($protocol == '')
+            return;
+
+        if (!in_array($protocol, $this->protocols))
+            return lang('base_invalid');
+    }
+
+    /**
      * Validation routine for winsserver
      *
      * @param  string  $winsserver  WINS server
@@ -2372,6 +2478,22 @@ class Samba extends Software
 
         if (!preg_match("/^([a-zA-Z0-9\-\.]*)$/", $winsserver))
             return lang('samba_common_wins_server_invalid');
+    }
+
+    /**
+     * Validation routine for Windows 10 logon support.
+     *
+     * @param boolean $state Windows 10 logon support
+     *
+     * @return string error if Windows 10 login support is invalid
+     */
+
+    public function validate_windows_10_support($state)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if (! clearos_is_valid_boolean($state))
+            return lang('base_state_invalid');
     }
 
     /**
