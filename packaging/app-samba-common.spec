@@ -1,7 +1,7 @@
 
 Name: app-samba-common
 Epoch: 1
-Version: 2.2.20
+Version: 2.3.0
 Release: 1%{dist}
 Summary: Samba Common - Core
 License: LGPLv3

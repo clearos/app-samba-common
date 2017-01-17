@@ -1546,6 +1546,23 @@ class Samba extends Software
     }
 
     /**
+     * Sets LDAP policies.
+     *
+     * @param  string  $options  LDAP options
+     *
+     * @return void
+     * @throws Validation_Exception, Engine_Exception
+     */
+
+    public function set_ldap_policy($options)
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        if (!empty($options['disable_strong_auth']))
+            $this->_set_share_info('global', 'ldap server require strong auth', 'No');
+    }
+
+    /**
      * Sets local master.
      *
      * @param  string  $state  local master state
