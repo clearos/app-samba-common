@@ -1414,7 +1414,11 @@ class Samba extends Software
 
         Validation_Exception::is_valid($this->validate_idmap_backend($backend));
 
-        $this->_set_share_info('global', 'idmap config * : backend', $backend);
+        // This is only called by a legacy AD API call. See _fix_rid_idmap_backend().
+        if ($backend == 'rid')
+            $this->_fix_rid_idmap_backend();
+        else
+            $this->_set_share_info('global', 'idmap config * : backend', $backend);
     }
 
     /**
@@ -2612,6 +2616,54 @@ class Samba extends Software
     ///////////////////////////////////////////////////////////////////////////////
     // P R I V A T E   M E T H O D S
     ///////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Fixes IDMAP backend for RID.
+     *
+     * In Samba 4.6.x, this AD configuration no longer works:
+     *    idmap config * : backend = rid
+     *    idmap config * : range = 20000000-29999999
+     *
+     * This needs to be converted to:
+     *    idmap config DOMAIN : backend = rid
+     *    idmap config DOMAIN : range = 20000000-29999999
+     *
+     * @return void
+     * @throws Validation_Exception, Engine_Exception
+     */
+
+    protected function _fix_rid_idmap_backend()
+    {
+        clearos_profile(__METHOD__, __LINE__);
+
+        $domain = strtoupper($this->get_workgroup());
+
+        $file = new File(self::FILE_CONFIG);
+        $convert_default = FALSE;
+
+        try {
+            $match = $file->lookup_line("/idmap\s+config\s+$domain\s*:\s*range/");
+        } catch (File_No_Match_Exception $e) {
+            $file->delete_lines('/idmap\s+config\s+\w+\s*:\s*range\s*=/');
+            $file->add_lines_before("idmap config $domain : range = 20000000-29999999\n", '/^idmap config/');
+            $convert_default = TRUE;
+        }
+
+        try {
+            $match = $file->lookup_line("/idmap\s+config\s+$domain\s*:\s*backend/");
+        } catch (File_No_Match_Exception $e) {
+            $file->delete_lines('/idmap\s+config\s+\w+\s*:\s*backend\s*=/');
+            $file->add_lines_before("idmap config $domain : backend = rid\n", '/^idmap config/');
+            $convert_default = TRUE;
+        }
+
+        if ($convert_default) {
+            $this->loaded = FALSE;
+            $this->_set_share_info('global', 'idmap config * : range', '30000000-39999999');
+            $this->_set_share_info('global', 'idmap config * : backend', 'tdb');
+        }
+    }
+
 
     /**
      * Returns a Samba boolean.

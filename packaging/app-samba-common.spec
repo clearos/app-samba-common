@@ -1,7 +1,7 @@
 
 Name: app-samba-common
 Epoch: 1
-Version: 2.3.0
+Version: 2.4.0
 Release: 1%{dist}
 Summary: Samba Common - Core
 License: LGPLv3
@@ -60,6 +60,7 @@ exit 0
 %files core
 %defattr(-,root,root)
 %exclude /usr/clearos/apps/samba_common/packaging
+%exclude /usr/clearos/apps/samba_common/unify.json
 %dir /usr/clearos/apps/samba_common
 %dir /var/clearos/events/samba_configuration
 %dir %attr(0775,root,webconfig) /var/clearos/samba_common/lock
